@@ -1,0 +1,29 @@
+.header {
+    overflow: hidden;
+    background-color: #68ac8b;
+    padding: 20px 10px;
+    display: flex;
+    justify-content: space-between;
+
+  }
+
+.navbar {
+    display: flex;
+}
+
+a.bar {
+  margin: 0 15px;
+  &:hover {
+    color: goldenrod;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: lightgrey;
+}
+
+.logo {
+  color: white;
+  font-weight: bold;
+}

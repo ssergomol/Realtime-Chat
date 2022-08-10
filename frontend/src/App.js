@@ -1,11 +1,14 @@
-import logo from './logo.svg';
 import './App.css';
+import Header from './components/Header/header.jsx'
+import Body from './components/Body/body'
 
 function App() {
+
   return (
-    <div className="App">
-      {/* <Header/>
-      <ChatHistory/>
+    <div className="app">
+      <Header/>
+      <Body/>
+      {/*<ChatHistory/>
       <InputSection/> */}
     </div>
   );
