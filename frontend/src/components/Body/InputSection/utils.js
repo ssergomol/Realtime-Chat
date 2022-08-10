@@ -1,18 +1,21 @@
 function inputAutoGrow() {
-    // Dealing with Textarea Height
+    const element = document.querySelector('.textarea');
+    const style = getComputedStyle(element);
+    let minHeight = parseInt(style.minHeight.slice(0, -2));
+    let maxHeight = parseInt(style.maxHeight.slice(0, -2));
+    let lineHeight = parseInt(style.lineHeight.slice(0, -2));
+    let paddingTop = parseInt(style.paddingTop.slice(0, -2));
+    let borderTop = parseInt(style.borderTop.slice(0, -2));
+
     function calcHeight(value) {
         let numberOfLineBreaks = (value.match(/\n/g) || []).length;
-
-        // min-height + lines x line-height + padding + border
-        let newHeight = 20 + numberOfLineBreaks * 20 + 12 + 2;
+        let newHeight = minHeight + numberOfLineBreaks * lineHeight + paddingTop + borderTop;
         return newHeight;
     }
 
     let textarea = document.querySelector(".resize");
     textarea.addEventListener("keyup", () => {
 
-        // max-height 
-        const maxHeight = 200;
         let calculatedHeight = calcHeight(textarea.value);
         if (calculatedHeight < maxHeight) {
             textarea.style.height = calculatedHeight + "px";
