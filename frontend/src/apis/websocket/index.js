@@ -3,16 +3,16 @@ let websocket;
 let connect = function (processSocketData) {
     websocket = new WebSocket("wss://localhost:9090/ws");
 
-    socket.onopen = function (e) {
+    websocket.onopen = function (e) {
         console.log("Connection is established");
     };
 
-    socket.onmessage = function (message) {
+    websocket.onmessage = function (message) {
         console.log(`Data from WebSocket: ${message}`);
         processSocketData(message);
     };
 
-    socket.onclose = function (event) {
+    websocket.onclose = function (event) {
         if (event.wasClean) {
             console.log(`Clean connection closure, code: ${event.code}, reason: ${event.reason}`);
         } else {
@@ -20,7 +20,7 @@ let connect = function (processSocketData) {
         }
     };
 
-    socket.onerror = function (error) {
+    websocket.onerror = function (error) {
         console.log(`Socket connection error: ${error}`);
     };
 };
@@ -29,4 +29,5 @@ let sendMessage = function(message) {
     console.log("Message sending...");
     websocket.send(message);
 };
-    
+
+export { connect, sendMessage }
