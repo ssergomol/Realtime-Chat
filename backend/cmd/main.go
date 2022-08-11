@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+
 	"github.com/ssergomol/RealtimeChat/pkg/websocketPool"
 )
 
@@ -12,8 +14,12 @@ func startPool() {
 }
 
 func setRoutes() {
-	http.HandleFunc("\ws", func(writer http.ResponseWriter, request *http.Request) {
-		
+	http.HandleFunc("/ws", func(writer http.ResponseWriter, request *http.Request) {
+		conn, err := websocketPool.UpgradeHandler(writer, request)
+		if err != nil {
+			log.Println(err)
+			fmt.Fprintln(writer, err)
+		}
 	})
 }
 
