@@ -1,46 +1,45 @@
 package websocketPool
 
 // Pool broadcasts messages to the
-// clients and responsible for clients being registered.
+// Clients and responsible for Clients being Registered.
 type Pool struct {
-	clients    map[*Client]bool
-	broadcast  chan []byte
-	register   chan *Client
-	unregister chan *Client
+	Clients    map[*Client]bool
+	Broadcast  chan Message
+	Register   chan *Client
+	UnRegister chan *Client
 }
 
-func newPool() *Pool {
+func NewPool() *Pool {
 	return &Pool{
-		clients:    make(map[*Client]bool),
-		broadcast:  make(chan []byte),
-		register:   make(chan *Client),
-		unregister: make(chan *Client),
+		Clients:    make(map[*Client]bool),
+		Broadcast:  make(chan Message),
+		Register:   make(chan *Client),
+		UnRegister: make(chan *Client),
 	}
 }
 
-func (pool *Pool) run() {
+func (pool *Pool) Run() {
 	for {
 		select {
-		case client := <-pool.register:
-			pool.clients[client] = true
+		case client := <-pool.Register:
+			pool.Clients[client] = true
 
-		case client := <-pool.unregister:
-			if _, ok := pool.clients[client]; ok {
-				delete(pool.clients, client)
+		case client := <-pool.UnRegister:
+			if _, ok := pool.Clients[client]; ok {
+				delete(pool.Clients, client)
 				close(client.send)
 			}
 
-		case message := <-pool.broadcast:
-			for client := range pool.clients {
+		case message := <-pool.Broadcast:
+			for client := range pool.Clients {
 				select {
 				case client.send <- message:
 				default:
-					delete(pool.clients, client)
+					delete(pool.Clients, client)
 					close(client.send)
 				}
 
 			}
-
 		}
 	}
 }
