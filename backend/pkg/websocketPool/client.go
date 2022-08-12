@@ -8,11 +8,11 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Client is intermediary between websocket and Pool
+// Client is intermediary between websocket and pool
 type Client struct {
-	Conn *websocket.Conn
-	Pool *Pool
-	Send chan Message
+	conn *websocket.Conn
+	pool *Pool
+	send chan Message
 }
 
 type Message struct {
@@ -21,44 +21,44 @@ type Message struct {
 }
 
 // readPump pumps messages, which arrived from web client
-// via webscocket connection, to the Pool
+// via webscocket connection, to the pool
 
 func (client *Client) readPump() {
 	defer func() {
-		client.Pool.unregister <- client
-		client.Conn.Close()
+		client.pool.unregister <- client
+		client.conn.Close()
 	}()
 
 	for {
-		messageType, messageContent, err := client.Conn.ReadMessage()
+		MessageType, messageContent, err := client.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
 			break
 		}
-		message := Message{MessageType: messageType, Body: string(messageContent)}
-		client.Pool.broadcast <- message
+		message := Message{MessageType: MessageType, Body: string(messageContent)}
+		client.pool.broadcast <- message
 	}
 }
 
-// writePump pumps messages, which were broadcasted on the Pool,
+// writePump pumps messages, which were broadcasted on the pool,
 // back to the web client via websocket connection
 
 func (client *Client) writePump() {
 	defer func() {
-		client.Conn.Close()
+		client.conn.Close()
 	}()
 
 	for {
 		select {
-		case message, ok := <-client.Send:
+		case message, ok := <-client.send:
 			if !ok {
-				client.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+				client.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
 
-			if err := client.Conn.WriteJSON(message); err != nil {
+			if err := client.conn.WriteJSON(message); err != nil {
 				log.Println(err)
 				return
 			}
@@ -67,12 +67,15 @@ func (client *Client) writePump() {
 }
 
 func ServeWS(pool *Pool, writer http.ResponseWriter, request *http.Request) {
-	conn, err := websocketPool.UpgradeHandler(writer, request)
-		if err != nil {
-			log.Println(err)
-			fmt.Fprintln(writer, err)
-		}
+	conn, err := UpgradeHandler(writer, request)
+	if err != nil {
+		log.Println(err)
+		fmt.Fprintln(writer, err)
+	}
 
-		client := &websocketPool.Client{Conn: conn, Pool: pool, Send: make(chan websocketPool.Message)}
-		client.Pool.
+	client := &Client{conn: conn, pool: pool, send: make(chan Message)}
+	client.pool.register <- client
+
+	go client.writePump()
+	go client.readPump()
 }
