@@ -4,7 +4,7 @@ import './header.scss'
 function Header() {
     return (
         <div className='header'>
-            <a href="/" class="logo">Realtime Chat</a>
+            <a href="/" className="logo">Realtime Chat</a>
             <nav className="navbar">
                 <a className="bar" href="#home">Home</a>
                 <a className="bar" href="#contact">Contact</a>

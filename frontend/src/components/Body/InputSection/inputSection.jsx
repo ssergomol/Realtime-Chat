@@ -7,7 +7,7 @@ function InputSection() {
     useEffect(inputAutoGrow, []);
     return (
         <div className="input-box">
-            <textarea class="textarea resize"></textarea>
+            <textarea className="textarea resize"></textarea>
         </div>
 
     );

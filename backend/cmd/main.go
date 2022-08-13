@@ -11,8 +11,9 @@ func main() {
 	fmt.Println("Realtime Chat starting...")
 	pool := websocketPool.NewPool()
 	go pool.Run()
+
 	http.HandleFunc("/ws", func(writer http.ResponseWriter, request *http.Request) {
 		websocketPool.ServeWS(pool, writer, request)
 	})
-	http.ListenAndServe(":8000", nil)
+	http.ListenAndServe(":8080", nil)
 }

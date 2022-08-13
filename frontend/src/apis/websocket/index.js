@@ -1,7 +1,7 @@
 let websocket;
 
 let connect = function (processSocketData) {
-    websocket = new WebSocket("wss://localhost:9090/ws");
+    websocket = new WebSocket("ws://" + document.location.host + "/ws");
 
     websocket.onopen = function (e) {
         console.log("Connection is established");
@@ -21,7 +21,7 @@ let connect = function (processSocketData) {
     };
 
     websocket.onerror = function (error) {
-        console.log(`Socket connection error: ${error}`);
+        console.log(`Socket connection error: ${error.code}`);
     };
 };
 
