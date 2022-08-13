@@ -1,5 +1,7 @@
 package websocketPool
 
+import "fmt"
+
 // Pool broadcasts messages to the
 // clients and responsible for clients being Registered.
 type Pool struct {
@@ -23,17 +25,21 @@ func (pool *Pool) Run() {
 		select {
 		case client := <-pool.register:
 			pool.clients[client] = true
+			fmt.Println("New clinet registered!")
 
 		case client := <-pool.unregister:
 			if _, ok := pool.clients[client]; ok {
 				delete(pool.clients, client)
 				close(client.send)
+				fmt.Println("Clinet unregistered!")
 			}
 
 		case message := <-pool.broadcast:
+			fmt.Println("Find message from broadcast\nTrying to send for each client!")
 			for client := range pool.clients {
 				select {
 				case client.send <- message:
+					fmt.Println("Message sent to client on broadcast")
 				default:
 					delete(pool.clients, client)
 					close(client.send)

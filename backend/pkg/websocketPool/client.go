@@ -31,6 +31,7 @@ func (client *Client) readPump() {
 
 	for {
 		MessageType, messageContent, err := client.conn.ReadMessage()
+		fmt.Println("Got message from browser: ", string(messageContent))
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
@@ -53,6 +54,7 @@ func (client *Client) writePump() {
 	for {
 		select {
 		case message, ok := <-client.send:
+
 			if !ok {
 				client.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
@@ -62,6 +64,7 @@ func (client *Client) writePump() {
 				log.Println(err)
 				return
 			}
+			fmt.Println("Sent message to browser from Send channel!")
 		}
 	}
 }
@@ -72,10 +75,11 @@ func ServeWS(pool *Pool, writer http.ResponseWriter, request *http.Request) {
 		log.Println(err)
 		fmt.Fprintln(writer, err)
 	}
+	fmt.Println("Protocol successfuly upgraded to WebScoket")
 
 	client := &Client{conn: conn, pool: pool, send: make(chan Message)}
 	client.pool.register <- client
 
-	go client.writePump()
 	go client.readPump()
+	go client.writePump()
 }

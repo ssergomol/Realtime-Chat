@@ -15,5 +15,6 @@ func main() {
 	http.HandleFunc("/ws", func(writer http.ResponseWriter, request *http.Request) {
 		websocketPool.ServeWS(pool, writer, request)
 	})
-	http.ListenAndServe(":8080", nil)
+
+	http.ListenAndServe(":9000", nil)
 }

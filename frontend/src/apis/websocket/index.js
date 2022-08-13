@@ -1,8 +1,7 @@
-let websocket;
+let websocket = new WebSocket('ws://localhost:9000/ws');
 
 let connect = function (processSocketData) {
-    websocket = new WebSocket("ws://" + document.location.host + "/ws");
-
+    
     websocket.onopen = function (e) {
         console.log("Connection is established");
     };

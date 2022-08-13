@@ -1,12 +1,12 @@
 import './chatHistory.scss'
-// import Message from '../../Message/message'
+import Message from '../../Message/message'
 
-function ChatHistory({ chatHistory }) {
-    console.log(chatHistory);
-    //const messages = chatHistory.map(message => <Message key={message.timeStamp} messageJSON={message.data} />);
+function ChatHistory({ history }) {
+    console.log(history);
+    const messages = history.map(message => <Message key={message.timeStamp} messageJSON={message.data} />);
     return (
         <div className='chatHistory'>
-            {/* {messages} */}
+            {messages}
         </div>
     );
 }

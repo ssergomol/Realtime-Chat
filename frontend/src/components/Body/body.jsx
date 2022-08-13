@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './body.scss'
 import ChatHistory from './ChatHistory/chatHistory'
 import InputSection from './InputSection/inputSection'
@@ -8,16 +8,19 @@ function Body() {
 
     const [chatHistory, updateChatHistory] = useState([])
 
-    const processSocketMessage = function (message) {
+    const processSocketMessage = useCallback((message) => {
         console.log("A new message has arrived!");
-        updateChatHistory(previousHistory => [...previousHistory, message]);
+        updateChatHistory(prevHistory => [...prevHistory, message]);
         console.log(message);
-    }
+    }, []);
 
-    useEffect(() => { connect(processSocketMessage); }, []);
-    
+    useEffect(() => {
+        connect(processSocketMessage);
+    }, [processSocketMessage]);
+
     const sendForm = (event) => {
-        if (event.key === 13 && !event.shiftKey) {
+
+        if (event.keyCode === 13 && !event.shiftKey) {
             sendMessage(event.target.value);
             event.target.value = "";
         }
@@ -25,7 +28,7 @@ function Body() {
 
     return (
         <div className='body'>
-            <ChatHistory messages={chatHistory} />
+            <ChatHistory history={chatHistory} />
             <InputSection send={sendForm} />
         </div>
     )
