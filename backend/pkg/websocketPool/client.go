@@ -16,8 +16,9 @@ type Client struct {
 }
 
 type Message struct {
-	MessageType int    `json:"type"`
-	Body        string `json:"body"`
+	MessageType  int    `json:"type"`
+	Body         string `json:"body"`
+	Notification bool   `json:"notification"`
 }
 
 // readPump pumps messages, which arrived from web client
@@ -38,7 +39,7 @@ func (client *Client) readPump() {
 			}
 			break
 		}
-		message := Message{MessageType: MessageType, Body: string(messageContent)}
+		message := Message{MessageType: MessageType, Body: string(messageContent), Notification: false}
 		client.pool.broadcast <- message
 	}
 }
