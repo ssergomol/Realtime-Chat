@@ -1,10 +1,14 @@
-let websocket = new WebSocket('ws://localhost:9000/ws');
+let websocket = new WebSocket('ws://' + document.location.hostname + ':9000/ws');
 
-let connect = function (processSocketData) {
-    
-    websocket.onopen = function (e) {
-        console.log("Connection is established");
-    };
+websocket.onopen = function (e) {
+    console.log("Connection is established");
+};
+
+websocket.onerror = function (error) {
+    console.log(`Socket connection error: ${error.code}`);
+};
+
+let defineWsListeners = function (processSocketData) {
 
     websocket.onmessage = function (message) {
         console.log(`Data from WebSocket: ${message}`);
@@ -18,10 +22,6 @@ let connect = function (processSocketData) {
             console.log(`Connection was interrupted, code: ${event.code}`);
         }
     };
-
-    websocket.onerror = function (error) {
-        console.log(`Socket connection error: ${error.code}`);
-    };
 };
 
 let sendMessage = function(message) {
@@ -29,4 +29,4 @@ let sendMessage = function(message) {
     websocket.send(message);
 };
 
-export { connect, sendMessage }
+export { defineWsListeners, sendMessage }

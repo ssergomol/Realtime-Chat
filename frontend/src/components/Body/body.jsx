@@ -2,7 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import './body.scss'
 import ChatHistory from './ChatHistory/chatHistory'
 import InputSection from './InputSection/inputSection'
-import { connect, sendMessage } from '../../apis/websocket/index'
+import { defineWsListeners, sendMessage } from '../../apis/websocket/index'
+import { setDefaultHeight } from '../utils'
 
 function Body() {
 
@@ -15,14 +16,17 @@ function Body() {
     }, []);
 
     useEffect(() => {
-        connect(processSocketMessage);
+        defineWsListeners(processSocketMessage);
     }, [processSocketMessage]);
 
     const sendForm = (event) => {
-
         if (event.keyCode === 13 && !event.shiftKey) {
-            sendMessage(event.target.value);
+            let text = event.target.value.trim();
+            if (text.length !== 0) {
+                sendMessage(text);
+            }
             event.target.value = "";
+            setDefaultHeight();
         }
     }
 
