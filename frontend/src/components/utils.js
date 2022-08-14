@@ -41,4 +41,8 @@ function setDefaultHeight() {
     textarea.style.height = height + "px";
 }
 
-export { setDefaultHeight, inputAutoGrow };
+function scrollToBottom() {
+    window.scrollTo(0, document.querySelector(".body").scrollHeight);
+}
+
+export { setDefaultHeight, inputAutoGrow, scrollToBottom };

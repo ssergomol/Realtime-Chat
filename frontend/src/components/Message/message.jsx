@@ -3,7 +3,6 @@ import './message.scss';
 
 function Message(props) {
     let message = JSON.parse(props.messageJSON);
-    
     return (
         <div className='message-box'>
             <p className='message-text'>
