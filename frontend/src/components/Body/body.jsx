@@ -31,7 +31,7 @@ function Body() {
     }
 
     return (
-        <div className='body'>
+        <div className='background body'>
             <ChatHistory history={chatHistory} />
             <InputSection send={sendForm} />
         </div>
