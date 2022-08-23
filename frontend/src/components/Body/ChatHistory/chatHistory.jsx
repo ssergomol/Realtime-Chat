@@ -1,6 +1,6 @@
 import './chatHistory.scss'
 import Message from '../../Message/message'
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { scrollToBottom } from '../../utils'
 
 function ChatHistory({ history }) {
