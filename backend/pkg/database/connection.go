@@ -1,7 +1,10 @@
 package database
 
 import (
-	"../models"
+	"fmt"
+	"log"
+
+	"github.com/ssergomol/RealtimeChat/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -9,12 +12,14 @@ import (
 var DB *gorm.DB
 
 func Connect() {
-	dsn := "host=localhost dbname=realtimeChat port=9920"
+	dsn := "host=localhost dbname=realtimechat"
 	dbConn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		panic("could not connect to the database")
+		log.Fatal(err)
 	}
+
+	fmt.Printf("Successfuly connected to database\n")
 
 	DB = dbConn
 

@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
+	"github.com/ssergomol/RealtimeChat/pkg/database"
+	"github.com/ssergomol/RealtimeChat/pkg/routes"
 	"github.com/ssergomol/RealtimeChat/pkg/websocketPool"
 )
 
@@ -12,9 +15,12 @@ func main() {
 	pool := websocketPool.NewPool()
 	go pool.Run()
 
-	http.HandleFunc("/ws", func(writer http.ResponseWriter, request *http.Request) {
-		websocketPool.ServeWS(pool, writer, request)
-	})
+	fmt.Println("Connecting to database...")
+	database.Connect()
+
+	router := mux.NewRouter()
+	routes.RegisterAuthRoutes(router)
+	routes.RegisterWsRoute(router, pool)
 
 	http.ListenAndServe(":9000", nil)
 }
