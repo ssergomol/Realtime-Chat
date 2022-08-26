@@ -44,7 +44,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	database.DB.Where("username = ?", data["username"]).First(&user)
 
-	if user.Id == 0 {
+	if user.ID == 0 {
 		w.WriteHeader(http.StatusNotFound)
 		utils.SetBodyInfoMessage(w, "User not found")
 		return
@@ -58,7 +58,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Issuer:    strconv.Itoa(int(user.Id)),
+		Issuer:    strconv.Itoa(int(user.ID)),
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), //1 day
 	})
 
