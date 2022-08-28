@@ -10,9 +10,9 @@ export default function SignIn() {
             <Header/>
             <div className='background sign-in'>
                 <form className='sign-in-form' method='POST' action='/sign-in'>
-                    <label for='username'>Username: </label>
+                    <label htmlFor='username'>Username: </label>
                     <input id='username' name='username' type='text'/>
-                    <label for='password'>Password: </label>
+                    <label htmlFor='password'>Password: </label>
                     <input id='password' name='password' type='password'/>
                     <button id='send-form' type='submit'>Send</button>
                 </form>
