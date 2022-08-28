@@ -1,4 +1,3 @@
-
 function inputAutoGrow() {
     const element = document.querySelector('.textarea');
     const style = getComputedStyle(element);

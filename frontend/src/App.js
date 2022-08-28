@@ -4,10 +4,10 @@ import Header from './components/Header/header.jsx';
 import Body from './components/Body/body';
 
 
-function App() {
+function App( {signState, setSignState} ) {
   return (
     <div className="app">
-      <Header/>
+      <Header signState={signState} setSignState={setSignState}/>
       <Body/>
     </div>
   );
