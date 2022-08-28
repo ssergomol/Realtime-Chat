@@ -52,6 +52,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 		var data map[string]string
 
 		utils.ParseBody(r, &data)
@@ -94,7 +95,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		}
 
 		http.SetCookie(w, cookie)
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		utils.SetBodyInfoMessage(w, "Successfully signed in")
 
@@ -110,6 +111,8 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		cookie, err := r.Cookie("jwt")
 		if err != nil {
 			fmt.Printf("No jwt token cookie was found\n")
@@ -134,8 +137,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		database.DB.Where("id = ?", claims.Issuer).First(&user)
 
 		res, _ := json.Marshal(user)
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Access-Control-Allow-Credentials", "true")
+
 		w.Write(res)
 
 	case http.MethodOptions:
@@ -149,14 +151,26 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func SignOut(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		cookie := &http.Cookie{
+			Name:     "jwt",
+			Value:    "",
+			Expires:  time.Now().Add(-time.Hour),
+			HttpOnly: true,
+		}
 
-	cookie := &http.Cookie{
-		Name:     "jwt",
-		Value:    "",
-		Expires:  time.Now().Add(-time.Hour),
-		HttpOnly: true,
+		http.SetCookie(w, cookie)
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		utils.SetBodyInfoMessage(w, "Successfully signed out")
+
+	case http.MethodOptions:
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Methods", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Max-Age", "86400")
 	}
 
-	http.SetCookie(w, cookie)
-	utils.SetBodyInfoMessage(w, "Successfully signed out")
 }
