@@ -23,6 +23,5 @@ func main() {
 	routes.RegisterAuthRoutes(router)
 
 	http.Handle("/", router)
-
 	http.ListenAndServe(":9000", nil)
 }

@@ -107,32 +107,45 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getUser(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("jwt")
-	if err != nil {
-		fmt.Printf("No jwt token cookie was found\n")
-		utils.SetBodyInfoMessage(w, "Couldn't get jwt token")
-		return
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		cookie, err := r.Cookie("jwt")
+		if err != nil {
+			fmt.Printf("No jwt token cookie was found\n")
+			utils.SetBodyInfoMessage(w, "Couldn't get jwt token")
+			return
+		}
+
+		token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(SecretKey), nil
+		})
+
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			utils.SetBodyInfoMessage(w, "Unauthenticated")
+			return
+		}
+
+		claims := token.Claims.(*jwt.StandardClaims)
+
+		var user models.User
+
+		database.DB.Where("id = ?", claims.Issuer).First(&user)
+
+		res, _ := json.Marshal(user)
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Write(res)
+
+	case http.MethodOptions:
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Methods", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Max-Age", "86400")
 	}
 
-	token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
-	})
-
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		utils.SetBodyInfoMessage(w, "Unauthenticated")
-		return
-	}
-
-	claims := token.Claims.(*jwt.StandardClaims)
-
-	var user models.User
-
-	database.DB.Where("id = ?", claims.Issuer).First(&user)
-
-	res, _ := json.Marshal(user)
-	w.Write(res)
 }
 
 func SignOut(w http.ResponseWriter, r *http.Request) {
