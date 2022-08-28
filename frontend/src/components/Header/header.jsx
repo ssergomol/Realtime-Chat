@@ -1,8 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './header.scss'
 import { Link } from "react-router-dom"
 
 function Header() {
+    useEffect(() => {
+        (
+            async () => {
+                const response = await fetch('http://' + document.location.hostname + ':9000/user', {
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include',
+                });
+
+
+                const content = await response.json();
+                if (response.ok) {
+                    console.log(content)
+                }
+
+            }
+        )();
+    });
+
     return (
         <div className='header'>
             <a href="/" className="logo">Realtime Chat</a>
