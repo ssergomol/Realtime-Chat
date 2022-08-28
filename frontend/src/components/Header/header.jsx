@@ -16,14 +16,14 @@ function Header( {signState, setSignState} ) {
 
                 const content = await response.json();
                 if (response.ok && !("message" in content) && content["ID"] !== 0) {
-                    setSignState(true)
                     setUserData(content)
+                    setSignState(true)
                     console.log(content)
                 }
 
             }
         )();
-    }, []);
+    }, [signState]);
 
     if (signState) {
         return (

@@ -3,7 +3,7 @@ import './signUp.scss';
 import React, { useState } from 'react';
 import  { useNavigate } from 'react-router-dom'
 
-export default function SignUp() {
+export default function SignUp( {signState, setSignState} ) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -28,7 +28,7 @@ export default function SignUp() {
         if (response.ok) {
             const content = await response.json();
             console.log(content); 
-            navigate("/");
+            navigate("/sign-in");
         }
           
     }
@@ -36,7 +36,7 @@ export default function SignUp() {
 
     return (
         <div className='app'>
-            <Header />
+            <Header signState={signState} setSignState={setSignState}/>
             <div className='background sign-up'>
                 <form className='sign-up-form' method='POST' action='/sign-up' onSubmit={submitHandler}>
                     <label htmffor='username'>Username: </label>

@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import  { useNavigate } from 'react-router-dom'
 
 
-export default function SignIn() {
+export default function SignIn( {signState, setSignState }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     let navigate = useNavigate();
@@ -27,12 +27,13 @@ export default function SignIn() {
         if (response.ok) {
             const content = await response.json();
             console.log(content); 
+            setSignState(true);
             navigate("/");
         }
     }
     return (
         <div className='app'>
-            <Header/>
+            <Header signState={signState} setSignState={setSignState}/>
             <div className='background sign-in'>
                 <form className='sign-in-form' method='POST' action='/sign-in' onSubmit={submit}>
                     <label htmlFor='username'>Username: </label>

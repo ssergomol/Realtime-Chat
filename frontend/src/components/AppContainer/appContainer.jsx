@@ -17,8 +17,8 @@ return (
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App signState={IsSignedIn} setSignState ={setSignState}/>}/>
-      <Route path="/sign-in" element={<SignIn/>}/>
-      <Route path="/sign-up" element={<SignUp/>}/>
+      <Route path="/sign-in" element={<SignIn signState={IsSignedIn} setSignState ={setSignState}/>}/>
+      <Route path="/sign-up" element={<SignUp signState={IsSignedIn} setSignState ={setSignState}/>}/>
       <Route path="/sign-out" element={<SignOut changeSignState={setSignState}/>}/>
     </Routes>
     
