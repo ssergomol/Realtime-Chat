@@ -16,6 +16,8 @@ import (
 
 const SecretKey = "secret"
 
+var externalIP string = utils.ExternalIP()
+
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
@@ -37,12 +39,12 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		res, _ := json.Marshal(user)
 		fmt.Print("res" + string(res) + "\n")
 		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", "http://"+externalIP+":3000")
 		w.Write(res)
 
 	case http.MethodOptions:
 		fmt.Printf("Got options req!\n")
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", "http://"+externalIP+":3000")
 		w.Header().Set("Access-Control-Allow-Methods", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "*")
 	}
@@ -52,7 +54,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", "http://"+externalIP+":3000")
 		var data map[string]string
 
 		utils.ParseBody(r, &data)
@@ -100,7 +102,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		utils.SetBodyInfoMessage(w, "Successfully signed in")
 
 	case http.MethodOptions:
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", "http://"+externalIP+":3000")
 		w.Header().Set("Access-Control-Allow-Methods", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -111,7 +113,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", "http://"+externalIP+":3000")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		cookie, err := r.Cookie("jwt")
 		if err != nil {
@@ -141,7 +143,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		w.Write(res)
 
 	case http.MethodOptions:
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", "http://"+externalIP+":3000")
 		w.Header().Set("Access-Control-Allow-Methods", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -161,12 +163,12 @@ func SignOut(w http.ResponseWriter, r *http.Request) {
 		}
 
 		http.SetCookie(w, cookie)
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", "http://"+externalIP+":3000")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		utils.SetBodyInfoMessage(w, "Successfully signed out")
 
 	case http.MethodOptions:
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", "http://"+externalIP+":3000")
 		w.Header().Set("Access-Control-Allow-Methods", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
