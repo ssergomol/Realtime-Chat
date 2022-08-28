@@ -19,8 +19,10 @@ func main() {
 	database.Connect()
 
 	router := mux.NewRouter()
-	routes.RegisterAuthRoutes(router)
 	routes.RegisterWsRoute(router, pool)
+	routes.RegisterAuthRoutes(router)
+
+	http.Handle("/", router)
 
 	http.ListenAndServe(":9000", nil)
 }

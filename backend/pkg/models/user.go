@@ -6,7 +6,7 @@ type User struct {
 	gorm.Model
 	ID       uint      `json:"id"`
 	Username string    `json:"username"`
-	Email    string    `json:"email" gorm:"unique"`
+	Email    string    `json:"email"`
 	Password []byte    `json:"-"`
 	Messages []Message `json:"messages"`
 }

@@ -18,8 +18,9 @@ const SecretKey = "secret"
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	var data map[string]string
-
+	fmt.Printf("Got sign up request\n")
 	utils.ParseBody(r, &data)
+	fmt.Printf("Credentials: %s, %s, %s\n", data["username"], data["email"], data["password"])
 
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 
@@ -28,10 +29,12 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		Email:    data["email"],
 		Password: password,
 	}
-
-	database.DB.Create(&user)
+	fmt.Printf("User object created!\n")
+	fmt.Println(database.DB.Create(&user))
 
 	res, _ := json.Marshal(user)
+	fmt.Print("res" + string(res) + "\n")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Write(res)
 }
 
