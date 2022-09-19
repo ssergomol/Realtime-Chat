@@ -1,3 +1,4 @@
+<a id="readme-top"></a>
 
 <br />
 <div align="center">
@@ -6,6 +7,8 @@
 
 <h3 align="center">Real-time chat application</h3>
 </div>
+
+
 
 
 
@@ -43,9 +46,9 @@ Here's a simple multiple user chat application for real-time messaging written i
 ### Technologies
 
 * [![GoLang-logo]][GoLang-url]
-* [![JavaScript-logo]][JavaScript-url]
 * [![React-logo]][React-url]
 * [![PostgreSQL-logo]][PostgreSQL-url]
+* [![JavaScript-logo]][JavaScript-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
