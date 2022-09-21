@@ -55,7 +55,7 @@ Here's a simple multiple user chat application for real-time messaging written i
 <!-- Features -->
 ## Features and implementations
 
-* Real‐time messaging for multiple users (Used WebSocket protocol for connection and goroutines and channel for asynchronous operation)
+* Real‐time messaging for multiple users (Used WebSocket protocol for connection, goroutines and channel for asynchronous operation)
 * Authorization and authentication (By storing JSON Web Tokens in Cookies)
 * Users' Database (Implemented using GORM ORM library and PostgreSQL)
 
